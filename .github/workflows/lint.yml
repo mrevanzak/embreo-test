@@ -1,0 +1,35 @@
+name: Code Check
+on:
+  push:
+    branches:
+      - main
+  pull_request: {}
+
+concurrency:
+  group: ${{ github.job }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    name: ⬣ ESLint, ʦ TypeScript, 💅 Prettier, and 🃏 Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: ⬇️ Checkout repo
+        uses: actions/checkout@v2
+
+      - name: 🤌 Setup bun
+      - uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+
+      - name: 📥 Download deps
+        run: bun install
+
+      - name: 🔬 Lint
+        run: bun run lint:strict
+
+      - name: 🔎 Type check
+        run: bun run typecheck
+
+      - name: 💅 Prettier check
+        run: bun run format:check

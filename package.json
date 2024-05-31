@@ -11,28 +11,46 @@
     "db:studio": "drizzle-kit studio",
     "dev": "next dev",
     "lint": "next lint",
-    "start": "next start"
+    "lint:fix": "eslint src --fix && bun format",
+    "lint:strict": "eslint --max-warnings=0 src",
+    "typecheck": "tsc --noEmit --incremental false",
+    "start": "next start",
+    "format": "prettier -w .",
+    "format:check": "prettier -c .",
+    "prepare": "husky install",
+    "ui-add": "bun x shadcn-ui add && prettier src --write --list-different"
   },
   "dependencies": {
     "@auth/drizzle-adapter": "^1.1.0",
+    "@hookform/resolvers": "^3.4.2",
+    "@radix-ui/react-label": "^2.0.2",
+    "@radix-ui/react-slot": "^1.0.2",
     "@t3-oss/env-nextjs": "^0.10.1",
     "@tanstack/react-query": "^5.39.0",
     "@trpc/client": "next",
     "@trpc/react-query": "next",
     "@trpc/server": "next",
     "@vercel/postgres": "^0.8.0",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.1.1",
     "drizzle-orm": "^0.30.10",
     "drizzle-zod": "^0.5.1",
     "geist": "^1.3.0",
+    "lucide-react": "^0.381.0",
     "next": "^14.2.1",
     "next-auth": "^5.0.0-beta.18",
     "react": "^18.3.0",
     "react-dom": "^18.3.0",
+    "react-hook-form": "^7.51.5",
     "server-only": "^0.0.1",
     "superjson": "^2.2.1",
-    "zod": "^3.23.3"
+    "tailwind-merge": "^2.3.0",
+    "tailwindcss-animate": "^1.0.7",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@commitlint/cli": "^16.3.0",
+    "@commitlint/config-conventional": "^16.2.4",
     "@types/eslint": "^8.56.2",
     "@types/node": "^20.11.20",
     "@types/react": "^18.2.57",
@@ -40,8 +58,13 @@
     "@typescript-eslint/eslint-plugin": "^7.1.1",
     "@typescript-eslint/parser": "^7.1.1",
     "drizzle-kit": "^0.21.4",
+    "husky": "^7.0.4",
+    "lint-staged": "^15.2.2",
     "eslint": "^8.57.0",
     "eslint-config-next": "^14.1.3",
+    "eslint-config-prettier": "^8.10.0",
+    "eslint-plugin-simple-import-sort": "^7.0.0",
+    "eslint-plugin-unused-imports": "^2.0.0",
     "eslint-plugin-drizzle": "^0.2.3",
     "postcss": "^8.4.34",
     "prettier": "^3.2.5",
@@ -51,5 +74,14 @@
   },
   "ct3aMetadata": {
     "initVersion": "7.34.0"
+  },
+  "lint-staged": {
+    "**/*.{js,jsx,ts,tsx}": [
+      "bun format",
+      "bun lint"
+    ],
+    "**/*.{json,css,scss,md,webmanifest}": [
+      "bun lint"
+    ]
   }
 }
