@@ -1,13 +1,13 @@
-import { createEnv } from "@t3-oss/env-nextjs";
-import { vercel } from "@t3-oss/env-nextjs/presets";
-import { z } from "zod";
+import { createEnv } from '@t3-oss/env-nextjs';
+import { vercel } from '@t3-oss/env-nextjs/presets';
+import { z } from 'zod';
 
 export const env = createEnv({
   extends: [vercel()],
   shared: {
     NODE_ENV: z
-      .enum(["development", "production", "test"])
-      .default("development"),
+      .enum(['development', 'production', 'test'])
+      .default('development'),
   },
   /**
    * Specify your server-side environment variables schema here. This way you can ensure the app
@@ -16,7 +16,7 @@ export const env = createEnv({
   server: {
     AUTH_SECRET: z.string().min(1),
     POSTGRES_URL: z.string().min(1),
-    PORT: z.string().default("3000"),
+    PORT: z.string().default('3000'),
   },
 
   /**

@@ -1,10 +1,10 @@
-import type { DefaultSession } from "next-auth";
-import { env } from "@/env";
-import NextAuth from "next-auth";
-import type { User as UserData } from "@/server/db/schema";
-import authConfig from "@/server/auth.config";
+import type { DefaultSession } from 'next-auth';
+import { env } from '@/env';
+import NextAuth from 'next-auth';
+import type { User as UserData } from '@/server/db/schema';
+import authConfig from '@/server/auth.config';
 
-declare module "next-auth" {
+declare module 'next-auth' {
   // eslint-disable-next-line @typescript-eslint/no-empty-interface
   interface User extends UserData {}
   /**
@@ -23,7 +23,7 @@ export const {
 } = NextAuth({
   ...authConfig,
   session: {
-    strategy: "jwt",
+    strategy: 'jwt',
   },
   callbacks: {
     jwt({ token, user }) {
@@ -37,5 +37,5 @@ export const {
       return session;
     },
   },
-  debug: env.NODE_ENV === "development",
+  debug: env.NODE_ENV === 'development',
 });
