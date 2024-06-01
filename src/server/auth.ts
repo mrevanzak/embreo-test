@@ -1,8 +1,9 @@
 import type { DefaultSession } from 'next-auth';
-import { env } from '@/env';
 import NextAuth from 'next-auth';
-import type { User as UserData } from '@/server/db/schema';
+
+import { env } from '@/env';
 import authConfig from '@/server/auth.config';
+import type { User as UserData } from '@/server/db/schema';
 
 declare module 'next-auth' {
   // eslint-disable-next-line @typescript-eslint/no-empty-interface

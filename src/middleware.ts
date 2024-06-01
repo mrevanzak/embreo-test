@@ -1,5 +1,6 @@
-import authConfig from '@/server/auth.config';
 import NextAuth from 'next-auth';
+
+import authConfig from '@/server/auth.config';
 
 const publicRoutes = [''];
 const authRoutes = ['/sign-in'];
