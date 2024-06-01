@@ -13,10 +13,10 @@ import {
 } from '@/components/ui/dropdown-menu';
 
 import { signOut } from '@/server/actions/auth';
-import { auth } from '@/server/auth';
+import { api } from '@/trpc/server';
 
 export async function Navbar() {
-  const session = await auth();
+  const auth = await api.auth.me();
 
   return (
     <header className='sticky top-0 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6'>
@@ -46,9 +46,7 @@ export async function Navbar() {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align='end'>
-            <DropdownMenuLabel>
-              {session?.user.companyName ?? 'Vendor'}
-            </DropdownMenuLabel>
+            <DropdownMenuLabel>{auth?.company.name}</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem className='cursor-pointer focus:bg-destructive focus:text-destructive-foreground'>
               <form action={signOut}>
