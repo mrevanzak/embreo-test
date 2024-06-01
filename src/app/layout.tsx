@@ -1,10 +1,13 @@
+import { GeistMono } from 'geist/font/mono';
+import { GeistSans } from 'geist/font/sans';
+
 import '@/styles/globals.css';
 
-import { GeistSans } from 'geist/font/sans';
-import { GeistMono } from 'geist/font/mono';
+import { cn } from '@/lib/utils';
+
+import { Toaster } from '@/components/ui/sonner';
 
 import { TRPCReactProvider } from '@/trpc/react';
-import { cn } from '@/lib/utils';
 
 export const metadata = {
   title: 'Create T3 App',
@@ -26,7 +29,10 @@ export default function RootLayout({
           GeistMono.variable,
         )}
       >
-        <TRPCReactProvider>{children}</TRPCReactProvider>
+        <TRPCReactProvider>
+          {children}
+          <Toaster />
+        </TRPCReactProvider>
       </body>
     </html>
   );
