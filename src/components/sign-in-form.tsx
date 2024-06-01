@@ -15,12 +15,12 @@ import {
   Form,
   FormControl,
   FormField,
+  FormInput,
   FormItem,
   FormLabel,
   FormMessage,
   useForm,
 } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
 
 import { signIn } from '@/server/actions/auth';
 import { authSchema } from '@/server/api/routers/auth/auth.input';
@@ -56,7 +56,7 @@ export function SignInForm() {
                 <FormItem>
                   <FormLabel>Email</FormLabel>
                   <FormControl>
-                    <Input {...field} />
+                    <FormInput {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -69,7 +69,7 @@ export function SignInForm() {
                 <FormItem>
                   <FormLabel>Password</FormLabel>
                   <FormControl>
-                    <Input {...field} type='password' />
+                    <FormInput {...field} type='password' />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

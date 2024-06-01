@@ -18,6 +18,7 @@ import type { ZodType, ZodTypeDef } from 'zod';
 
 import { cn } from '@/lib/utils';
 
+import { type InputProps, Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
 const useForm = <TOut, TDef extends ZodTypeDef, TIn extends FieldValues>(
@@ -121,6 +122,26 @@ const FormLabel = React.forwardRef<
 });
 FormLabel.displayName = 'FormLabel';
 
+const FormInput = React.forwardRef<HTMLInputElement, InputProps>(
+  ({ className, ...props }, ref) => {
+    const { formItemId, error } = useFormField();
+
+    return (
+      <Input
+        ref={ref}
+        id={formItemId}
+        className={cn(
+          error && 'border-destructive',
+          'focus:ring-primary-500 focus:border-primary-500 block w-full rounded-md border px-3 py-2 shadow-sm sm:text-sm',
+          className,
+        )}
+        {...props}
+      />
+    );
+  },
+);
+FormInput.displayName = 'FormInput';
+
 const FormControl = React.forwardRef<
   React.ElementRef<typeof Slot>,
   React.ComponentPropsWithoutRef<typeof Slot>
@@ -190,6 +211,7 @@ export {
   FormControl,
   FormDescription,
   FormField,
+  FormInput,
   FormItem,
   FormLabel,
   FormMessage,
