@@ -1,7 +1,6 @@
 'use client';
 
-import { usePathname, useSearchParams } from 'next/navigation';
-import { useRouter } from 'next/navigation';
+import { DialogClose } from '@radix-ui/react-dialog';
 import * as React from 'react';
 
 import { useMediaQuery } from '@/lib/hooks/use-media-query';
@@ -11,6 +10,7 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -39,23 +39,11 @@ export function ResponsiveDialog({
   description,
   children,
 }: ResponsiveDialogProps) {
-  const params = useSearchParams();
-  const router = useRouter();
-  const pathname = usePathname();
-
-  const open = params.has('add');
-  const setOpen = () => {
-    if (open) {
-      router.back();
-    }
-    router.push(`${pathname}?add=true`);
-  };
-
   const isDesktop = useMediaQuery('(min-width: 768px)');
 
   if (isDesktop) {
     return (
-      <Dialog open={open} onOpenChange={setOpen}>
+      <Dialog>
         <DialogTrigger asChild>{trigger}</DialogTrigger>
         <DialogContent className='sm:max-w-[425px]'>
           <DialogHeader>
@@ -63,13 +51,20 @@ export function ResponsiveDialog({
             <DialogDescription>{description}</DialogDescription>
           </DialogHeader>
           {children}
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button variant='outline' className='flex-1'>
+                Cancel
+              </Button>
+            </DialogClose>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     );
   }
 
   return (
-    <Drawer open={open} onOpenChange={setOpen}>
+    <Drawer>
       <DrawerTrigger asChild>{trigger}</DrawerTrigger>
       <DrawerContent>
         <DrawerHeader className='text-left'>

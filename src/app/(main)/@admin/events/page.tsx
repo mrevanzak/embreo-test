@@ -1,6 +1,5 @@
 import { PlusCircle } from 'lucide-react';
 
-import { DataTable } from '@/components/data-table';
 import { EventForm } from '@/components/event-form';
 import { ResponsiveDialog } from '@/components/responsive-dialog';
 import { Button } from '@/components/ui/button';
@@ -8,14 +7,13 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
 
 import { api } from '@/trpc/server';
 
-import { columns } from './columns';
+import { Table } from './table';
 
 export default async function EventsPage() {
   const data = await api.event.get();
@@ -44,13 +42,8 @@ export default async function EventsPage() {
         <CardDescription>Manage your events</CardDescription>
       </CardHeader>
       <CardContent>
-        <DataTable columns={columns} data={data} />
+        <Table initialData={data} />
       </CardContent>
-      <CardFooter>
-        <div className='text-xs text-muted-foreground'>
-          Showing <strong>1-10</strong> of <strong>32</strong> products
-        </div>
-      </CardFooter>
     </Card>
   );
 }

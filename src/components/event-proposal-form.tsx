@@ -48,7 +48,7 @@ export function EventProposalForm() {
       proposedBy: data?.company.id ?? '',
     },
   });
-  const onSubmit = form.handleSubmit(async (input) => {
+  const onSubmit = form.handleSubmit((input) => {
     if (!data?.company.id) {
       return;
     }
@@ -112,7 +112,7 @@ export function EventProposalForm() {
                   <PopoverContent className='w-auto p-0' align='start'>
                     <Calendar
                       mode='single'
-                      // selected={new Date(field.value)}
+                      selected={field.value ? new Date(field.value) : undefined}
                       onSelect={field.onChange}
                       disabled={(date) =>
                         date > new Date() || date < new Date('1900-01-01')
@@ -137,6 +137,20 @@ export function EventProposalForm() {
             </Button>
           </div>
         )}
+
+        <FormField
+          control={form.control}
+          name='location'
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Location</FormLabel>
+              <FormControl>
+                <FormInput {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
         <FormField
           control={form.control}
@@ -179,7 +193,9 @@ export function EventProposalForm() {
           )}
         />
 
-        <Button type='submit'>Save changes</Button>
+        <Button type='submit' loading={create.isPending}>
+          Save changes
+        </Button>
       </form>
     </Form>
   );

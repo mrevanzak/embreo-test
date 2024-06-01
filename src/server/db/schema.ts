@@ -97,8 +97,8 @@ export const eventProposals = createTable('event_proposal', {
     .references(() => events.id),
   proposedBy: uuid('proposed_by')
     .notNull()
-    .references(() => users.id),
+    .references(() => companies.id),
 });
-export const eventProposal = createSelectSchema(eventProposals);
+export const selectEventProposalSchema = createSelectSchema(eventProposals);
 export const insertEventProposalSchema = createInsertSchema(eventProposals);
-export type EventProposal = z.infer<typeof eventProposal>;
+export type EventProposal = z.infer<typeof selectEventProposalSchema>;

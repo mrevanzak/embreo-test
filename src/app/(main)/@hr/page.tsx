@@ -7,12 +7,17 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
 
+import { api } from '@/trpc/server';
+
+import { Table } from './table';
+
 export default async function HR() {
+  const data = await api.proposedEvents.get();
+
   return (
     <Card>
       <CardHeader>
@@ -36,13 +41,8 @@ export default async function HR() {
         <CardDescription>Propose your new wellness event</CardDescription>
       </CardHeader>
       <CardContent>
-        {/* <DataTable columns={columns} data={data} /> */}
+        <Table initialData={data} />
       </CardContent>
-      <CardFooter>
-        <div className='text-xs text-muted-foreground'>
-          Showing <strong>1-10</strong> of <strong>32</strong> products
-        </div>
-      </CardFooter>
     </Card>
   );
 }

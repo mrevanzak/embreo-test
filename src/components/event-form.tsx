@@ -35,7 +35,7 @@ export function EventForm() {
 
   return (
     <Form {...form}>
-      <form className='grid items-start gap-4' onSubmit={onSubmit}>
+      <form className='grid items-start gap-8' onSubmit={onSubmit}>
         <FormField
           control={form.control}
           name='name'
