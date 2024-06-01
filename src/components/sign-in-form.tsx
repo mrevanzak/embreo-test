@@ -34,7 +34,7 @@ export function SignInForm() {
     toast.promise(signIn(email, password), {
       loading: 'Signing in...',
       success: 'Signed in successfully',
-      error: (e) => 'Failed to sign in: ' + e.message,
+      error: (e: Error) => 'Failed to sign in: ' + e.message,
     });
   });
 
