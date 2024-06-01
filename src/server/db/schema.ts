@@ -20,7 +20,7 @@ export const createTable = pgTableCreator((name) => `embreo-test_${name}`);
  * User Schema
  *
  */
-const roleEnum = pgEnum('role', ['vendor_admin', 'company_hr']);
+const roleEnum = pgEnum('embreo-test_role', ['vendor_admin', 'company_hr']);
 export const users = createTable('user', {
   id: varchar('id', { length: 255 })
     .primaryKey()
