@@ -1,6 +1,11 @@
 'use client';
 
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import {
+  MutationCache,
+  QueryCache,
+  QueryClient,
+  QueryClientProvider,
+} from '@tanstack/react-query';
 import { loggerLink, unstable_httpBatchStreamLink } from '@trpc/client';
 import { createTRPCReact } from '@trpc/react-query';
 import { type inferRouterInputs, type inferRouterOutputs } from '@trpc/server';
@@ -8,9 +13,28 @@ import { useState } from 'react';
 import SuperJSON from 'superjson';
 
 import { type AppRouter } from '@/server/api/root';
+import { toast } from 'sonner';
 
-const createQueryClient = () => new QueryClient();
-
+const createQueryClient = () =>
+  new QueryClient({
+    defaultOptions: {
+      queries: {
+        // With SSR, we usually want to set some default staleTime
+        // above 0 to avoid refetching immediately on the client
+        staleTime: 60 * 1000,
+      },
+    },
+    queryCache: new QueryCache({
+      onError: (err) => {
+        toast.error(err.message);
+      },
+    }),
+    mutationCache: new MutationCache({
+      onError: (err) => {
+        toast.error(err.message);
+      },
+    }),
+  });
 let clientQueryClientSingleton: QueryClient | undefined = undefined;
 const getQueryClient = () => {
   if (typeof window === 'undefined') {
