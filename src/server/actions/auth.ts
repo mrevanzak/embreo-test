@@ -16,14 +16,11 @@ export async function signIn(email: string, password: string) {
       throw new Error(
         error.cause?.err?.message ?? 'Oops! Something went wrong!',
       );
-      // return {
-      //   error: error.cause?.err?.message ?? 'Oops! Something went wrong!',
-      // };
     }
     throw error;
   }
 }
 
 export async function signOut() {
-  await signOutServer({ redirectTo: '/sign-in' });
+  return await signOutServer({ redirectTo: '/sign-in' });
 }

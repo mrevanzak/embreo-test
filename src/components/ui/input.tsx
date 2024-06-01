@@ -1,3 +1,5 @@
+'use client';
+
 import * as React from 'react';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
