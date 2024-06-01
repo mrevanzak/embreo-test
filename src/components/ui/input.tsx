@@ -1,7 +1,7 @@
 'use client';
 
+import { Eye, EyeOff } from 'lucide-react';
 import * as React from 'react';
-import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 import { cn } from '@/lib/utils';
 
@@ -24,14 +24,14 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         />
         {type === 'password' && (
           <button
-            className='absolute right-2 top-2.5 focus:outline-none'
+            className='absolute right-2.5 top-2.5 focus:outline-none'
             type='button'
             onClick={() => setIsVisible(!isVisible)}
           >
             {isVisible ? (
-              <FaEyeSlash className='pointer-events-none text-lg' />
+              <EyeOff className='pointer-events-none size-5' />
             ) : (
-              <FaEye className='pointer-events-none text-lg' />
+              <Eye className='pointer-events-none size-5' />
             )}
           </button>
         )}
