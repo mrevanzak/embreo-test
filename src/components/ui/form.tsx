@@ -1,17 +1,37 @@
-import * as React from 'react';
-import * as LabelPrimitive from '@radix-ui/react-label';
+'use client';
+
+import { zodResolver } from '@hookform/resolvers/zod';
+import type * as LabelPrimitive from '@radix-ui/react-label';
 import { Slot } from '@radix-ui/react-slot';
+import * as React from 'react';
 import {
+  type ControllerProps,
+  type FieldPath,
+  type FieldValues,
+  type UseFormProps,
   Controller,
-  ControllerProps,
-  FieldPath,
-  FieldValues,
   FormProvider,
+  useForm as __useForm,
   useFormContext,
 } from 'react-hook-form';
+import type { ZodType, ZodTypeDef } from 'zod';
 
 import { cn } from '@/lib/utils';
+
 import { Label } from '@/components/ui/label';
+
+const useForm = <TOut, TDef extends ZodTypeDef, TIn extends FieldValues>(
+  props: Omit<UseFormProps<TIn>, 'resolver'> & {
+    schema: ZodType<TOut, TDef, TIn>;
+  },
+) => {
+  const form = __useForm<TIn>({
+    ...props,
+    resolver: zodResolver(props.schema, undefined),
+  });
+
+  return form;
+};
 
 const Form = FormProvider;
 
@@ -166,12 +186,13 @@ const FormMessage = React.forwardRef<
 FormMessage.displayName = 'FormMessage';
 
 export {
-  useFormField,
   Form,
-  FormItem,
-  FormLabel,
   FormControl,
   FormDescription,
-  FormMessage,
   FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+  useForm,
+  useFormField,
 };

@@ -1,6 +1,7 @@
-import { users } from '@/server/db/schema';
 import { createInsertSchema } from 'drizzle-zod';
 import { z } from 'zod';
+
+import { users } from '@/server/db/schema';
 
 export const authSchema = createInsertSchema(users, {
   email: z.string().email(),
