@@ -1,3 +1,4 @@
+import bcrypt from 'bcryptjs';
 import type { NextAuthConfig } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 
@@ -19,16 +20,16 @@ export default {
         },
       },
       async authorize(credentials) {
-        const { email } = await authSchema.parseAsync(credentials);
+        const { email, password } = await authSchema.parseAsync(credentials);
         const user = await db.query.users.findFirst({
           where: (user, { eq }) => eq(user.email, email),
         });
 
         if (!user) throw new Error('User not found! Please sign up');
 
-        // if (!(await bcrypt.compare(password, user.password))) {
-        //   throw new Error("Invalid credentials");
-        // }
+        if (!(await bcrypt.compare(password, user.password))) {
+          throw new Error('Invalid credentials');
+        }
 
         return {
           ...user,
