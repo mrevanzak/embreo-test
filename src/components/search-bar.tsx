@@ -26,7 +26,7 @@ export function SearchBar() {
       <div className='relative'>
         <Input
           type='search'
-          placeholder='Search event...'
+          placeholder='Search...'
           className='sm:w-[300px] md:w-[200px] lg:w-[300px]'
           onChange={(e) => {
             router.push(
