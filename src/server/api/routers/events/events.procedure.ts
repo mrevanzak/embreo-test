@@ -6,8 +6,14 @@ import {
 import { events, insertEventSchema } from '@/server/db/schema';
 
 export const eventsRouter = createTRPCRouter({
-  get: protectedProcedure.query(async ({ ctx }) => {
+  getAll: protectedProcedure.query(async ({ ctx }) => {
     return await ctx.db.query.events.findMany();
+  }),
+
+  get: adminProcedure.query(async ({ ctx }) => {
+    return await ctx.db.query.events.findMany({
+      where: (event, { eq }) => eq(event.handledBy, ctx.session.user.companyId),
+    });
   }),
 
   create: adminProcedure

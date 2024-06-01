@@ -38,7 +38,7 @@ export function EventProposalForm() {
   const [dateCounter, setDateCounter] = useState(1);
 
   const { data } = api.auth.me.useQuery();
-  const events = api.event.get.useQuery();
+  const events = api.event.getAll.useQuery();
   const create = api.proposedEvents.create.useMutation();
 
   const form = useForm({
@@ -101,7 +101,7 @@ export function EventProposalForm() {
                         )}
                       >
                         {field.value ? (
-                          moment(field.value).format('MMM D, YYYY')
+                          moment(field.value).format('LL')
                         ) : (
                           <span>Pick a date</span>
                         )}
