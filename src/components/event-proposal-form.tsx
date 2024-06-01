@@ -1,3 +1,5 @@
+'use client';
+
 import { CalendarIcon, PlusIcon } from 'lucide-react';
 import moment from 'moment';
 import { useState } from 'react';
@@ -32,7 +34,7 @@ import {
 import { insertEventProposalSchema } from '@/server/db/schema';
 import { api } from '@/trpc/react';
 
-export function EventProposalForm({ className }: React.ComponentProps<'form'>) {
+export function EventProposalForm() {
   const [dateCounter, setDateCounter] = useState(1);
 
   const { data } = api.auth.me.useQuery();
@@ -59,10 +61,7 @@ export function EventProposalForm({ className }: React.ComponentProps<'form'>) {
 
   return (
     <Form {...form}>
-      <form
-        className={cn('grid items-start gap-4', className)}
-        onSubmit={onSubmit}
-      >
+      <form className='grid items-start gap-4' onSubmit={onSubmit}>
         <FormField
           control={form.control}
           name='proposedBy'

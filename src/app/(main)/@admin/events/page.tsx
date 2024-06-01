@@ -1,6 +1,6 @@
 import { PlusCircle } from 'lucide-react';
 
-import { EventProposalForm } from '@/components/event-proposal-form';
+import { EventForm } from '@/components/event-form';
 import { ResponsiveDialog } from '@/components/responsive-dialog';
 import { Button } from '@/components/ui/button';
 import {
@@ -12,15 +12,15 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 
-export default async function HR() {
+export default async function EventsPage() {
   return (
     <Card>
       <CardHeader>
         <CardTitle className='flex justify-between'>
-          Proposed Events
+          Events
           <ResponsiveDialog
-            title='Add Event Proposal'
-            description='Propose your new wellness event'
+            title='Add Event'
+            description="Add a new event that you're hosting"
             trigger={
               <Button size='sm' className='h-8 gap-1'>
                 <PlusCircle className='h-3.5 w-3.5' />
@@ -30,10 +30,11 @@ export default async function HR() {
               </Button>
             }
           >
-            <EventProposalForm />
+            <EventForm />
           </ResponsiveDialog>
         </CardTitle>
-        <CardDescription>Propose your new wellness event</CardDescription>
+
+        <CardDescription>Manage your events</CardDescription>
       </CardHeader>
       <CardContent>
         {/* <DataTable columns={columns} data={data} /> */}

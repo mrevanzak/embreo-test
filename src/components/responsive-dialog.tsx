@@ -1,5 +1,7 @@
 'use client';
 
+import { usePathname, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import * as React from 'react';
 
 import { useMediaQuery } from '@/lib/hooks/use-media-query';
@@ -24,20 +26,31 @@ import {
   DrawerTrigger,
 } from '@/components/ui/drawer';
 
-import { EventProposalForm } from './add-event-proposal-form';
-
-type AddEventDialogProps = {
+type ResponsiveDialogProps = {
   trigger: React.ReactNode;
   title: string;
   description: string;
+  children: React.ReactNode;
 };
 
-export function AddEventProposalDialog({
+export function ResponsiveDialog({
   trigger,
   title,
   description,
-}: AddEventDialogProps) {
-  const [open, setOpen] = React.useState(false);
+  children,
+}: ResponsiveDialogProps) {
+  const params = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
+
+  const open = params.has('add');
+  const setOpen = () => {
+    if (open) {
+      router.back();
+    }
+    router.push(`${pathname}?add=true`);
+  };
+
   const isDesktop = useMediaQuery('(min-width: 768px)');
 
   if (isDesktop) {
@@ -49,7 +62,7 @@ export function AddEventProposalDialog({
             <DialogTitle>{title}</DialogTitle>
             <DialogDescription>{description}</DialogDescription>
           </DialogHeader>
-          <EventProposalForm />
+          {children}
         </DialogContent>
       </Dialog>
     );
@@ -63,7 +76,7 @@ export function AddEventProposalDialog({
           <DrawerTitle>{title}</DrawerTitle>
           <DrawerDescription>{description}</DrawerDescription>
         </DrawerHeader>
-        <EventProposalForm className='px-4' />
+        <div className='px-4'>{children}</div>
         <DrawerFooter className='pt-2'>
           <DrawerClose asChild>
             <Button variant='outline'>Cancel</Button>

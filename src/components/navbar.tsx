@@ -22,21 +22,21 @@ export async function Navbar() {
     <header className='sticky top-0 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6'>
       <nav className='hidden flex-col gap-6 text-lg font-medium sm:flex sm:flex-row sm:items-center sm:gap-5 sm:text-sm lg:gap-6'>
         <Link
-          href='#'
+          href='/'
           className='flex items-center gap-2 text-lg font-semibold md:text-base'
         >
           <HeartHandshake className='h-6 w-6' />
           <span className='sr-only'>Acme Inc</span>
         </Link>
         <Link
-          href='#'
+          href='/'
           className='text-foreground transition-colors hover:text-foreground'
         >
           Dashboard
         </Link>
         {auth?.role === 'vendor_admin' && (
           <Link
-            href='#'
+            href='/events'
             className='text-foreground transition-colors hover:text-foreground'
           >
             Events

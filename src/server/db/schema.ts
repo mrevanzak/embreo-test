@@ -60,6 +60,7 @@ export const events = createTable('event', {
 
   handledBy: uuid('handled_by').references(() => companies.id),
 });
+export const insertEventSchema = createInsertSchema(events);
 
 /*
  * Company Schema
@@ -97,7 +98,5 @@ export const eventProposals = createTable('event_proposal', {
     .references(() => users.id),
 });
 export const eventProposal = createSelectSchema(eventProposals);
-export const insertEventProposalSchema = createInsertSchema(
-  eventProposals,
-).omit({ id: true });
+export const insertEventProposalSchema = createInsertSchema(eventProposals);
 export type EventProposal = z.infer<typeof eventProposal>;
