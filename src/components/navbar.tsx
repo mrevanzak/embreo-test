@@ -1,6 +1,7 @@
-import { CircleUser, HeartHandshake, Search } from 'lucide-react';
+import { CircleUser, HeartHandshake } from 'lucide-react';
 import Link from 'next/link';
 
+import { SearchBar } from '@/components/search-bar';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -10,7 +11,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Input } from '@/components/ui/input';
 
 import { signOut } from '@/server/actions/auth';
 import { auth } from '@/server/auth';
@@ -37,16 +37,7 @@ export async function Navbar() {
       </nav>
 
       <div className='flex w-full items-center gap-4 md:ml-auto md:gap-2 lg:gap-4'>
-        <form className='ml-auto flex-1 sm:flex-initial'>
-          <div className='relative'>
-            <Search className='absolute left-2.5 top-2.5 h-6 w-6 text-muted-foreground' />
-            <Input
-              type='search'
-              placeholder='Search event...'
-              className='pl-8 sm:w-[300px] md:w-[200px] lg:w-[300px]'
-            />
-          </div>
-        </form>
+        <SearchBar />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant='secondary' size='icon' className='rounded-full'>
