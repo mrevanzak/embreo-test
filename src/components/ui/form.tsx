@@ -22,13 +22,15 @@ import { type InputProps, Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
 const useForm = <TOut, TDef extends ZodTypeDef, TIn extends FieldValues>(
-  props: Omit<UseFormProps<TIn>, 'resolver'> & {
+  props: Omit<UseFormProps<TIn>, 'resolver' | 'values'> & {
     schema: ZodType<TOut, TDef, TIn>;
+    values?: Partial<TIn>;
   },
 ) => {
   const form = __useForm<TIn>({
     ...props,
     resolver: zodResolver(props.schema, undefined),
+    values: props?.values as TIn,
   });
 
   return form;

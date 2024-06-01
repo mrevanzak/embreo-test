@@ -1,11 +1,14 @@
+import { relations, sql } from 'drizzle-orm';
 import {
+  date,
   pgEnum,
   pgTableCreator,
   text,
   timestamp,
+  uuid,
   varchar,
 } from 'drizzle-orm/pg-core';
-import { createSelectSchema } from 'drizzle-zod';
+import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
 import { type z } from 'zod';
 
 /**
@@ -22,16 +25,79 @@ export const createTable = pgTableCreator((name) => `embreo-test_${name}`);
  */
 const roleEnum = pgEnum('embreo-test_role', ['vendor_admin', 'company_hr']);
 export const users = createTable('user', {
-  id: varchar('id', { length: 255 })
+  id: uuid('id')
     .primaryKey()
-    .$defaultFn(() => crypto.randomUUID()),
+    .default(sql`gen_random_uuid()`),
   name: varchar('name', { length: 255 }).notNull(),
-  companyName: varchar('company_name', { length: 255 }),
   email: varchar('email', { length: 255 }).notNull(),
-  emailVerified: timestamp('email_verified', { mode: 'date' }),
   password: text('password').notNull(),
   role: roleEnum('role').notNull(),
   createdAt: timestamp('created_at', { mode: 'date' }).defaultNow(),
+
+  companyId: uuid('company_id')
+    .notNull()
+    .references(() => companies.id),
 });
+export const userRelation = relations(users, ({ one }) => ({
+  company: one(companies, {
+    fields: [users.companyId],
+    references: [companies.id],
+  }),
+}));
 const user = createSelectSchema(users);
 export type User = Omit<z.infer<typeof user>, 'password'>;
+
+/*
+ * Event Schema
+ *
+ */
+export const events = createTable('event', {
+  id: uuid('id')
+    .primaryKey()
+    .default(sql`gen_random_uuid()`),
+  name: varchar('name', { length: 255 }).notNull(),
+  createdAt: timestamp('created_at', { mode: 'date' }).defaultNow(),
+
+  handledBy: uuid('handled_by').references(() => companies.id),
+});
+
+/*
+ * Company Schema
+ *
+ */
+export const companies = createTable('company', {
+  id: uuid('id')
+    .primaryKey()
+    .default(sql`gen_random_uuid()`),
+  name: varchar('name', { length: 255 }).notNull(),
+  createdAt: timestamp('created_at', { mode: 'date' }).defaultNow(),
+});
+export const companyRelation = relations(companies, ({ many }) => ({
+  users: many(users),
+}));
+
+/*
+ * EventProposal Schema
+ *
+ */
+export const eventProposals = createTable('event_proposal', {
+  id: uuid('id')
+    .primaryKey()
+    .default(sql`gen_random_uuid()`),
+  date: date('date', { mode: 'date' }).notNull(),
+  date1: date('date1', { mode: 'date' }),
+  date2: date('date2', { mode: 'date' }),
+  location: varchar('location', { length: 255 }).notNull(),
+
+  eventId: uuid('event_id')
+    .notNull()
+    .references(() => events.id),
+  proposedBy: uuid('proposed_by')
+    .notNull()
+    .references(() => users.id),
+});
+export const eventProposal = createSelectSchema(eventProposals);
+export const insertEventProposalSchema = createInsertSchema(
+  eventProposals,
+).omit({ id: true });
+export type EventProposal = z.infer<typeof eventProposal>;

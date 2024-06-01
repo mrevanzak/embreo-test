@@ -1,3 +1,6 @@
+import { authRouter } from '@/server/api/routers/auth/auth.procedure';
+import { eventsRouter } from '@/server/api/routers/events/events.procedure';
+import { proposedEventsRouter } from '@/server/api/routers/proposed-events/proposed-events.procedure';
 import { createCallerFactory, createTRPCRouter } from '@/server/api/trpc';
 
 /**
@@ -6,7 +9,9 @@ import { createCallerFactory, createTRPCRouter } from '@/server/api/trpc';
  * All routers added in /api/routers should be manually added here.
  */
 export const appRouter = createTRPCRouter({
-  // post: postRouter,
+  proposedEvents: proposedEventsRouter,
+  auth: authRouter,
+  event: eventsRouter,
 });
 
 // export type definition of API

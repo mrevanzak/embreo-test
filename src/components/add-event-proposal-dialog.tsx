@@ -3,7 +3,6 @@
 import * as React from 'react';
 
 import { useMediaQuery } from '@/lib/hooks/use-media-query';
-import { cn } from '@/lib/utils';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -24,18 +23,8 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from '@/components/ui/drawer';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-  useForm,
-} from '@/components/ui/form';
-import { z } from 'zod';
+
+import { EventProposalForm } from './add-event-proposal-form';
 
 type AddEventDialogProps = {
   trigger: React.ReactNode;
@@ -43,7 +32,7 @@ type AddEventDialogProps = {
   description: string;
 };
 
-export function AddEventDialog({
+export function AddEventProposalDialog({
   trigger,
   title,
   description,
@@ -60,7 +49,7 @@ export function AddEventDialog({
             <DialogTitle>{title}</DialogTitle>
             <DialogDescription>{description}</DialogDescription>
           </DialogHeader>
-          <EventForm />
+          <EventProposalForm />
         </DialogContent>
       </Dialog>
     );
@@ -74,7 +63,7 @@ export function AddEventDialog({
           <DrawerTitle>{title}</DrawerTitle>
           <DrawerDescription>{description}</DrawerDescription>
         </DrawerHeader>
-        <EventForm className='px-4' />
+        <EventProposalForm className='px-4' />
         <DrawerFooter className='pt-2'>
           <DrawerClose asChild>
             <Button variant='outline'>Cancel</Button>
@@ -82,38 +71,5 @@ export function AddEventDialog({
         </DrawerFooter>
       </DrawerContent>
     </Drawer>
-  );
-}
-
-function EventForm({ className }: React.ComponentProps<'form'>) {
-  const form = useForm({
-    schema: authSchema,
-    mode: 'onTouched',
-  });
-  const onSubmit = form.handleSubmit(async ({ email, password }) => {});
-
-  return (
-    <Form {...form}>
-      <form
-        className={cn('grid items-start gap-4', className)}
-        onSubmit={onSubmit}
-      >
-        <FormField
-          control={form.control}
-          name='email'
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel></FormLabel>
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <Button type='submit'>Save changes</Button>
-      </form>
-    </Form>
   );
 }
