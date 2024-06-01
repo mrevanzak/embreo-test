@@ -77,7 +77,11 @@ export function SignInForm() {
             />
           </CardContent>
           <CardFooter>
-            <Button className='w-full' type='submit'>
+            <Button
+              className='w-full'
+              type='submit'
+              disabled={!form.formState.isValid || form.formState.isSubmitting}
+            >
               Sign in
             </Button>
           </CardFooter>
