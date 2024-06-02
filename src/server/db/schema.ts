@@ -83,6 +83,11 @@ export const companyRelation = relations(companies, ({ many }) => ({
  * EventProposal Schema
  *
  */
+const statusEnum = pgEnum('embreo-test_status', [
+  'pending',
+  'approved',
+  'rejected',
+]);
 export const eventProposals = createTable('event_proposal', {
   id: uuid('id')
     .primaryKey()
@@ -92,6 +97,7 @@ export const eventProposals = createTable('event_proposal', {
   date2: date('date2', { mode: 'date' }),
   location: varchar('location', { length: 255 }).notNull(),
   createdAt: timestamp('created_at', { mode: 'date' }).defaultNow(),
+  status: statusEnum('status').notNull().default('pending'),
 
   eventId: uuid('event_id')
     .notNull()
