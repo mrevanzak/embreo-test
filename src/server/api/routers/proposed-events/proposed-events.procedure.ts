@@ -55,11 +55,11 @@ export const proposedEventsRouter = createTRPCRouter({
     }),
 
   approve: adminProcedure
-    .input(selectEventProposalSchema.pick({ id: true }))
+    .input(selectEventProposalSchema.pick({ id: true, approvedDate: true }))
     .mutation(async ({ ctx, input }) => {
       return await ctx.db
         .update(eventProposals)
-        .set({ status: 'approved' })
+        .set({ status: 'approved', approvedDate: input.approvedDate })
         .where(eq(eventProposals.id, input.id));
     }),
 

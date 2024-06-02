@@ -24,6 +24,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import {
   Select,
   SelectContent,
@@ -58,6 +59,11 @@ export function EventProposalForm(props: {
     },
   });
 
+  const [approvedDate, setApprovedDate] = useState<string | null>(
+    props.values?.approvedDate?.toString() ??
+      props.values?.date.toString() ??
+      null,
+  );
   const approve = api.proposedEvents.approve.useMutation({
     onSuccess: async () => {
       await utils.proposedEvents.invalidate();
@@ -109,53 +115,61 @@ export function EventProposalForm(props: {
           )}
         />
 
-        {[...Array(dateCounter).keys()].map((_, i) => (
-          <FormField
-            key={i}
-            control={form.control}
-            // @ts-expect-error - TS doesn't like the dynamic key
-            name={i > 0 ? `date${i}` : 'date'}
-            render={({ field, formState }) => (
-              <FormItem className='flex flex-col'>
-                <FormLabel className='flex justify-between'>Date</FormLabel>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <FormControl>
-                      <Button
-                        variant='outline'
-                        disabled={props.disabled}
-                        className={cn(
-                          'pl-3 text-left text-base font-normal',
-                          !field.value && 'text-muted-foreground',
-                          formState.errors[field.name] && 'border-destructive',
-                        )}
-                      >
-                        {field.value ? (
-                          moment(field.value).format('LL')
-                        ) : (
-                          <span>Pick a date</span>
-                        )}
-                        <CalendarIcon className='ml-auto h-4 w-4 opacity-50' />
-                      </Button>
-                    </FormControl>
-                  </PopoverTrigger>
-                  <PopoverContent className='w-auto p-0' align='start'>
-                    <Calendar
-                      mode='single'
-                      selected={field.value ? new Date(field.value) : undefined}
-                      onSelect={field.onChange}
-                      disabled={(date) =>
-                        date > new Date() || date < new Date('1900-01-01')
-                      }
-                      initialFocus
-                    />
-                  </PopoverContent>
-                </Popover>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        ))}
+        <RadioGroup value={approvedDate} onValueChange={setApprovedDate}>
+          {[...Array(dateCounter).keys()].map((_, i) => (
+            <FormField
+              key={i}
+              control={form.control}
+              // @ts-expect-error - TS doesn't like the dynamic key
+              name={i > 0 ? `date${i}` : 'date'}
+              render={({ field, formState }) => (
+                <FormItem className='flex flex-col'>
+                  <FormLabel className='flex justify-between'>Date</FormLabel>
+                  <div className='flex items-center gap-2'>
+                    <RadioGroupItem value={field.value?.toString()} />
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <FormControl>
+                          <Button
+                            variant='outline'
+                            disabled={props.disabled}
+                            className={cn(
+                              'flex-1 pl-3 text-left text-base font-normal',
+                              !field.value && 'text-muted-foreground',
+                              formState.errors[field.name] &&
+                                'border-destructive',
+                            )}
+                          >
+                            {field.value ? (
+                              moment(field.value).format('LL')
+                            ) : (
+                              <span>Pick a date</span>
+                            )}
+                            <CalendarIcon className='ml-auto h-4 w-4 opacity-50' />
+                          </Button>
+                        </FormControl>
+                      </PopoverTrigger>
+                      <PopoverContent className='w-auto p-0' align='start'>
+                        <Calendar
+                          mode='single'
+                          selected={
+                            field.value ? new Date(field.value) : undefined
+                          }
+                          onSelect={field.onChange}
+                          disabled={(date) =>
+                            date > new Date() || date < new Date('1900-01-01')
+                          }
+                          initialFocus
+                        />
+                      </PopoverContent>
+                    </Popover>
+                  </div>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          ))}
+        </RadioGroup>
         {dateCounter < 3 && !props.values && (
           <div className='flex items-center justify-end'>
             <Button
@@ -240,7 +254,12 @@ export function EventProposalForm(props: {
               <Button
                 className='flex-1'
                 type='button'
-                onClick={() => approve.mutate({ id: props.values?.id ?? '' })}
+                onClick={() =>
+                  approve.mutate({
+                    id: props.values?.id ?? '',
+                    approvedDate: new Date(approvedDate ?? ''),
+                  })
+                }
                 loading={approve.isPending}
               >
                 Approve
