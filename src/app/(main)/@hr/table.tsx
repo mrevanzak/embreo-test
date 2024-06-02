@@ -2,10 +2,12 @@
 
 import { type ColumnDef } from '@tanstack/react-table';
 import { Eye, Trash } from 'lucide-react';
+import moment from 'moment';
 import { useRouter } from 'next/navigation';
 
 import { DataTable } from '@/components/data-table';
 import { ResponsiveDialog } from '@/components/responsive-dialog';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 
 import type { EventProposal } from '@/server/db/schema';
@@ -41,6 +43,13 @@ export function Table({
     {
       accessorKey: 'location',
       header: 'Location',
+    },
+    {
+      accessorKey: 'createdAt',
+      header: 'Created At',
+      cell: ({ row }) => (
+        <Badge>{moment(row.original.createdAt).fromNow()}</Badge>
+      ),
     },
     {
       id: 'actions',

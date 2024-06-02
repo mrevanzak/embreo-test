@@ -1,4 +1,4 @@
-import { type SQL, and, eq } from 'drizzle-orm';
+import { type SQL, and, desc, eq } from 'drizzle-orm';
 
 import { createTRPCRouter, protectedProcedure } from '@/server/api/trpc';
 import {
@@ -19,7 +19,8 @@ export const proposedEventsRouter = createTRPCRouter({
       })
       .from(eventProposals)
       .innerJoin(companies, eq(eventProposals.proposedBy, companies.id))
-      .innerJoin(events, eq(eventProposals.eventId, events.id));
+      .innerJoin(events, eq(eventProposals.eventId, events.id))
+      .orderBy(desc(eventProposals.createdAt));
 
     const filters: SQL[] = [];
     if (ctx.session.user.role === 'vendor_admin') {

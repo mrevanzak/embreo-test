@@ -91,6 +91,7 @@ export const eventProposals = createTable('event_proposal', {
   date1: date('date1', { mode: 'date' }),
   date2: date('date2', { mode: 'date' }),
   location: varchar('location', { length: 255 }).notNull(),
+  createdAt: timestamp('created_at', { mode: 'date' }).defaultNow(),
 
   eventId: uuid('event_id')
     .notNull()
