@@ -60,9 +60,7 @@ export function EventProposalForm(props: {
   });
 
   const [approvedDate, setApprovedDate] = useState<string | null>(
-    props.values?.approvedDate?.toString() ??
-      props.values?.date.toString() ??
-      null,
+    props.values?.approvedDate?.toString() ?? null,
   );
   const approve = api.proposedEvents.approve.useMutation({
     onSuccess: async () => {
@@ -115,7 +113,11 @@ export function EventProposalForm(props: {
           )}
         />
 
-        <RadioGroup value={approvedDate} onValueChange={setApprovedDate}>
+        <RadioGroup
+          disabled={data?.role === 'company_hr'}
+          value={approvedDate}
+          onValueChange={setApprovedDate}
+        >
           {[...Array(dateCounter).keys()].map((_, i) => (
             <FormField
               key={i}
@@ -126,7 +128,9 @@ export function EventProposalForm(props: {
                 <FormItem className='flex flex-col'>
                   <FormLabel className='flex justify-between'>Date</FormLabel>
                   <div className='flex items-center gap-2'>
-                    <RadioGroupItem value={field.value?.toString()} />
+                    {props.values && (
+                      <RadioGroupItem value={field.value?.toString()} />
+                    )}
                     <Popover>
                       <PopoverTrigger asChild>
                         <FormControl>
