@@ -1,29 +1,32 @@
-# Create T3 App
+## Database
+![image](https://github.com/mrevanzak/embreo-test/assets/73029778/36ffdd3f-3690-4acf-a8f8-0af338d51b8a)
 
-This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
+## User
+| name         | email                         | password                                                     | created_at                 | role         |
+| ------------ | ----------------------------- | ------------------------------------------------------------ | -------------------------- | ------------ |
+| Jane Doe     | admin@rejuvenate-retreats.com | Abc12345@                                                    | 2024-06-01 09:54:47.280998 | vendor_admin |
+| John Doe     | admin@harmony-haven.com       | Abc12345@                                                    | 2024-06-01 09:54:44.120329 | vendor_admin |
+| John Smith   | admin@tranquil-gatherings.com | Abc12345@                                                    | 2024-06-01 09:54:44.333415 | vendor_admin |
+| Rahul        | hr@embreo.com                 | Abc12345@                                                    | 2024-06-01 09:56:56.096192 | company_hr   |
+| John Johnson | admin@blissful-moments.com    | Abc12345@                                                    | 2024-06-01 09:54:44.35327  | vendor_admin |
+| Jane Smith   | hr@vitality-ventures.com      | Abc12345@                                                    | 2024-06-01 09:54:44.343365 | company_hr   |
 
-## What's next? How do I make an app with this?
-
-We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.
-
-If you are not familiar with the different technologies used in this project, please refer to the respective docs. If you still are in the wind, please join our [Discord](https://t3.gg/discord) and ask for help.
+## Tech stack used
 
 - [Next.js](https://nextjs.org)
 - [NextAuth.js](https://next-auth.js.org)
 - [Prisma](https://prisma.io)
-- [Drizzle](https://orm.drizzle.team)
 - [Tailwind CSS](https://tailwindcss.com)
 - [tRPC](https://trpc.io)
+- [shadcn/ui](https://ui.shadcn.com)
+- [Vercel Postgres](https://vercel.com/docs/storage/vercel-postgres)
 
-## Learn More
-
-To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the following resources:
-
-- [Documentation](https://create.t3.gg/)
-- [Learn the T3 Stack](https://create.t3.gg/en/faq#what-learning-resources-are-currently-available) — Check out these awesome tutorials
-
-You can check out the [create-t3-app GitHub repository](https://github.com/t3-oss/create-t3-app) — your feedback and contributions are welcome!
-
-## How do I deploy this?
-
-Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
+### How to run the project 🚀:
+  1. Open the `Terminal`.
+  2. Clone the repository by entering `git clone https://github.com/mrevanzak/embreo-test.git `.
+  3. Ensure that `NodeJS` and `yarn` are installed on the system.
+  4. change the directory to repository name using  `cd embreo-test`.
+  5.  Copy `.env.example` as `.env` and fill it
+  6. install the dependencies by executing the following command: `yarn install`.
+  7. To run the project. execute `yarn dev`. and it will point to the `localhost` server with the port `3000`.
+  8. Enter the `IP Address: http://localhost:3000` on a web browser and use the application.
