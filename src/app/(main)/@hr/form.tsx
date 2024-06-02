@@ -35,10 +35,18 @@ import {
 import { insertEventProposalSchema } from '@/server/db/schema';
 import { api } from '@/trpc/react';
 
-export function EventProposalForm() {
+import { type EventProposalDataTable } from './table';
+
+export function EventProposalForm(props: {
+  values?: EventProposalDataTable;
+  disabled?: boolean;
+}) {
   const router = useRouter();
 
-  const [dateCounter, setDateCounter] = useState(1);
+  const checkDate = Object.entries(props.values ?? {}).filter(
+    ([key, value]) => key.startsWith('date') && value,
+  ).length;
+  const [dateCounter, setDateCounter] = useState(checkDate || 1);
 
   const utils = api.useUtils();
   const { data } = api.auth.me.useQuery();
@@ -54,7 +62,8 @@ export function EventProposalForm() {
     schema: insertEventProposalSchema,
     mode: 'onTouched',
     values: {
-      proposedBy: data?.company.id ?? '',
+      ...props.values,
+      proposedBy: props.values?.proposedBy ?? data?.company.id,
     },
   });
   const onSubmit = form.handleSubmit((input) => {
@@ -76,12 +85,16 @@ export function EventProposalForm() {
           name='proposedBy'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Company</FormLabel>
+              <FormLabel>Proposed By</FormLabel>
               <FormControl>
                 <FormInput
                   {...field}
                   disabled
-                  value={data?.company.name ?? 'Fetching...'}
+                  value={
+                    props.values?.proposedBy ??
+                    data?.company.name ??
+                    'Fetching...'
+                  }
                 />
               </FormControl>
               <FormMessage />
@@ -103,6 +116,7 @@ export function EventProposalForm() {
                     <FormControl>
                       <Button
                         variant='outline'
+                        disabled={props.disabled}
                         className={cn(
                           'pl-3 text-left font-normal',
                           !field.value && 'text-muted-foreground',
@@ -135,7 +149,7 @@ export function EventProposalForm() {
             )}
           />
         ))}
-        {dateCounter < 3 && (
+        {dateCounter < 3 && !props.values && (
           <div className='flex items-center justify-end'>
             <Button
               size='sm'
@@ -154,7 +168,7 @@ export function EventProposalForm() {
             <FormItem>
               <FormLabel>Location</FormLabel>
               <FormControl>
-                <FormInput {...field} />
+                <FormInput {...field} disabled={props.disabled} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -164,10 +178,15 @@ export function EventProposalForm() {
         <FormField
           control={form.control}
           name='eventId'
+          disabled={props.disabled}
           render={({ field, formState }) => (
             <FormItem>
               <FormLabel>Event</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue=''>
+              <Select
+                onValueChange={field.onChange}
+                defaultValue={field.value}
+                disabled={props.disabled}
+              >
                 <FormControl>
                   <SelectTrigger
                     className={cn(
@@ -202,9 +221,11 @@ export function EventProposalForm() {
           )}
         />
 
-        <Button type='submit' loading={create.isPending}>
-          Save changes
-        </Button>
+        {!props.values && (
+          <Button type='submit' loading={create.isPending}>
+            Save changes
+          </Button>
+        )}
       </form>
     </Form>
   );

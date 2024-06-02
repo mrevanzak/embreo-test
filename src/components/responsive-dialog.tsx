@@ -30,7 +30,7 @@ import {
 type ResponsiveDialogProps = {
   trigger: React.ReactNode;
   title: string;
-  description: string;
+  description?: string;
   children: React.ReactNode;
   id: string;
 };
