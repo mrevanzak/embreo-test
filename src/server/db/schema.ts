@@ -58,7 +58,9 @@ export const events = createTable('event', {
   name: varchar('name', { length: 255 }).notNull(),
   createdAt: timestamp('created_at', { mode: 'date' }).defaultNow(),
 
-  handledBy: uuid('handled_by').notNull().references(() => companies.id),
+  handledBy: uuid('handled_by')
+    .notNull()
+    .references(() => companies.id),
 });
 export const insertEventSchema = createInsertSchema(events);
 export const selectEventSchema = createSelectSchema(events);
