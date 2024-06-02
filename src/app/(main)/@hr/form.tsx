@@ -59,10 +59,18 @@ export function EventProposalForm(props: {
     },
   });
 
-  const [approvedDate, setApprovedDate] = useState<string | null>(
-    props.values?.approvedDate?.toString() ?? null,
+  const [approvedDate, setApprovedDate] = useState<string | undefined>(
+    props.values?.approvedDate?.toString() ?? undefined,
   );
   const approve = api.proposedEvents.approve.useMutation({
+    onSuccess: async () => {
+      await utils.proposedEvents.invalidate();
+      router.back();
+    },
+  });
+
+  const [reject, setReject] = useState(false);
+  const rejectEvent = api.proposedEvents.reject.useMutation({
     onSuccess: async () => {
       await utils.proposedEvents.invalidate();
       router.back();
@@ -128,7 +136,7 @@ export function EventProposalForm(props: {
                 <FormItem className='flex flex-col'>
                   <FormLabel className='flex justify-between'>Date</FormLabel>
                   <div className='flex items-center gap-2'>
-                    {props.values && (
+                    {props.values && field.value && (
                       <RadioGroupItem value={field.value?.toString()} />
                     )}
                     <Popover>
@@ -246,6 +254,22 @@ export function EventProposalForm(props: {
           )}
         />
 
+        {reject && (
+          <FormField
+            control={form.control}
+            name='remarks'
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Remarks</FormLabel>
+                <FormControl>
+                  <FormInput {...field} value={field.value ?? ''} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        )}
+
         {!props.values && (
           <Button type='submit' loading={create.isPending}>
             Save changes
@@ -268,7 +292,23 @@ export function EventProposalForm(props: {
               >
                 Approve
               </Button>
-              <Button className='flex-1' variant='destructive' type='button'>
+              <Button
+                className='flex-1'
+                variant='destructive'
+                type='button'
+                loading={rejectEvent.isPending}
+                onClick={() => {
+                  if (!reject) {
+                    setReject(true);
+                    return;
+                  }
+
+                  rejectEvent.mutate({
+                    id: props.values?.id ?? '',
+                    remarks: form.getValues('remarks') ?? '',
+                  });
+                }}
+              >
                 Reject
               </Button>
             </div>
