@@ -1,5 +1,7 @@
 # Embreo-test
 
+## [Wakatime Stats](https://wakatime.com/@mrevanzak/projects/zogdtxodal?start=2024-05-27&end=2024-06-02)
+
 ## Database
 
 ![image](https://github.com/mrevanzak/embreo-test/assets/73029778/36ffdd3f-3690-4acf-a8f8-0af338d51b8a)
