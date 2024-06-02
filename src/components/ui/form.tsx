@@ -132,11 +132,7 @@ const FormInput = React.forwardRef<HTMLInputElement, InputProps>(
       <Input
         ref={ref}
         id={formItemId}
-        className={cn(
-          error && 'border-destructive',
-          'focus:ring-primary-500 focus:border-primary-500 block w-full rounded-md border px-3 py-2 shadow-sm sm:text-sm',
-          className,
-        )}
+        className={cn(error && 'border-destructive', className)}
         {...props}
       />
     );
