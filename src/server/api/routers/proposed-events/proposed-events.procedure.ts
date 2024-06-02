@@ -1,6 +1,10 @@
 import { type SQL, and, desc, eq } from 'drizzle-orm';
 
-import { createTRPCRouter, protectedProcedure } from '@/server/api/trpc';
+import {
+  adminProcedure,
+  createTRPCRouter,
+  protectedProcedure,
+} from '@/server/api/trpc';
 import {
   companies,
   eventProposals,
@@ -46,6 +50,15 @@ export const proposedEventsRouter = createTRPCRouter({
     .input(insertEventProposalSchema)
     .mutation(async ({ ctx, input }) => {
       return await ctx.db.insert(eventProposals).values(input);
+    }),
+
+  approve: adminProcedure
+    .input(selectEventProposalSchema.pick({ id: true }))
+    .mutation(async ({ ctx, input }) => {
+      return await ctx.db
+        .update(eventProposals)
+        .set({ status: 'approved' })
+        .where(eq(eventProposals.id, input.id));
     }),
 
   delete: protectedProcedure

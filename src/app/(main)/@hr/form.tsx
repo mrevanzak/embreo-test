@@ -58,6 +58,13 @@ export function EventProposalForm(props: {
     },
   });
 
+  const approve = api.proposedEvents.approve.useMutation({
+    onSuccess: async () => {
+      await utils.proposedEvents.invalidate();
+      router.back();
+    },
+  });
+
   const form = useForm({
     schema: insertEventProposalSchema,
     mode: 'onTouched',
@@ -226,6 +233,23 @@ export function EventProposalForm(props: {
             Save changes
           </Button>
         )}
+
+        {data?.role === 'vendor_admin' &&
+          props.values?.status === 'pending' && (
+            <div className='flex gap-4'>
+              <Button
+                className='flex-1'
+                type='button'
+                onClick={() => approve.mutate({ id: props.values?.id ?? '' })}
+                loading={approve.isPending}
+              >
+                Approve
+              </Button>
+              <Button className='flex-1' variant='destructive' type='button'>
+                Reject
+              </Button>
+            </div>
+          )}
       </form>
     </Form>
   );
