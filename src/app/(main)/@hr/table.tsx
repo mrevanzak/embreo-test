@@ -10,7 +10,13 @@ import { Button } from '@/components/ui/button';
 import type { EventProposal } from '@/server/db/schema';
 import { api } from '@/trpc/react';
 
-export function Table({ initialData }: { initialData: EventProposal[] }) {
+type EventProposalDataTable = EventProposal & { proposedByCompany: string };
+
+export function Table({
+  initialData,
+}: {
+  initialData: EventProposalDataTable[];
+}) {
   const utils = api.useUtils();
   const { data } = api.proposedEvents.get.useQuery(undefined, { initialData });
   const { mutate, isPending } = api.proposedEvents.delete.useMutation({
@@ -19,7 +25,11 @@ export function Table({ initialData }: { initialData: EventProposal[] }) {
     },
   });
 
-  const columns: ColumnDef<EventProposal>[] = [
+  const columns: ColumnDef<EventProposalDataTable>[] = [
+    {
+      accessorKey: 'proposedByCompany',
+      header: 'Proposed By',
+    },
     {
       accessorKey: 'location',
       header: 'Location',

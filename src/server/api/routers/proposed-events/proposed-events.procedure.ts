@@ -11,12 +11,15 @@ import {
 export const proposedEventsRouter = createTRPCRouter({
   get: protectedProcedure.query(async ({ ctx }) => {
     const query = await ctx.db
-      .select({ eventProposals })
+      .select()
       .from(eventProposals)
       .innerJoin(companies, eq(eventProposals.proposedBy, companies.id))
       .where(eq(companies.id, ctx.session.user.companyId));
 
-    return query.map((row) => row.eventProposals);
+    return query.map((row) => ({
+      ...row.event_proposal,
+      proposedByCompany: row.company.name,
+    }));
   }),
 
   create: protectedProcedure
