@@ -1,6 +1,5 @@
 import { PlusCircle } from 'lucide-react';
 
-import { EventForm } from '@/components/event-form';
 import { ResponsiveDialog } from '@/components/responsive-dialog';
 import { Button } from '@/components/ui/button';
 import {
@@ -13,6 +12,7 @@ import {
 
 import { api } from '@/trpc/server';
 
+import { EventForm } from './form';
 import { Table } from './table';
 
 export default async function EventsPage() {

@@ -12,13 +12,12 @@ import {
 } from '@/server/db/schema';
 
 export const eventsRouter = createTRPCRouter({
-  getAll: protectedProcedure.query(async ({ ctx }) => {
-    return await ctx.db.query.events.findMany();
-  }),
-
-  get: adminProcedure.query(async ({ ctx }) => {
+  get: protectedProcedure.query(async ({ ctx }) => {
     return await ctx.db.query.events.findMany({
-      where: (event, { eq }) => eq(event.handledBy, ctx.session.user.companyId),
+      where: (event, { eq }) =>
+        eq(event.handledBy, ctx.session.user.companyId).if(
+          ctx.session.user.role === 'vendor_admin',
+        ),
     });
   }),
 
