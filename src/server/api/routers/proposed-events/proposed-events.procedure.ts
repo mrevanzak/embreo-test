@@ -1,24 +1,43 @@
-import { eq } from 'drizzle-orm';
+import { type SQL, and, eq } from 'drizzle-orm';
 
 import { createTRPCRouter, protectedProcedure } from '@/server/api/trpc';
 import {
   companies,
   eventProposals,
+  events,
   insertEventProposalSchema,
   selectEventProposalSchema,
 } from '@/server/db/schema';
 
 export const proposedEventsRouter = createTRPCRouter({
   get: protectedProcedure.query(async ({ ctx }) => {
-    const query = await ctx.db
-      .select()
+    const baseQuery = ctx.db
+      .select({
+        eventProposals,
+        event: events.name,
+        company: companies.name,
+      })
       .from(eventProposals)
       .innerJoin(companies, eq(eventProposals.proposedBy, companies.id))
-      .where(eq(companies.id, ctx.session.user.companyId));
+      .innerJoin(events, eq(eventProposals.eventId, events.id));
 
+    const filters: SQL[] = [];
+    if (ctx.session.user.role === 'vendor_admin') {
+      filters.push(eq(events.handledBy, ctx.session.user.companyId));
+    }
+
+    if (ctx.session.user.role === 'company_hr') {
+      filters.push(eq(companies.id, ctx.session.user.companyId));
+    }
+
+    const query = await baseQuery.where(and(...filters));
     return query.map((row) => ({
-      ...row.event_proposal,
-      proposedByCompany: row.company.name,
+      ...row.eventProposals,
+      event: row.event,
+      proposedBy:
+        ctx.session.user.role === 'company_hr'
+          ? ctx.session.user.name
+          : row.company,
     }));
   }),
 

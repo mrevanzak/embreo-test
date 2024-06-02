@@ -11,7 +11,7 @@ import { Button } from '@/components/ui/button';
 import type { EventProposal } from '@/server/db/schema';
 import { api } from '@/trpc/react';
 
-type EventProposalDataTable = EventProposal & { proposedByCompany: string };
+type EventProposalDataTable = EventProposal & { event: string };
 
 export function Table({
   initialData,
@@ -31,8 +31,12 @@ export function Table({
 
   const columns: ColumnDef<EventProposalDataTable>[] = [
     {
-      accessorKey: 'proposedByCompany',
+      accessorKey: 'proposedBy',
       header: 'Proposed By',
+    },
+    {
+      accessorKey: 'event',
+      header: 'Event',
     },
     {
       accessorKey: 'location',
