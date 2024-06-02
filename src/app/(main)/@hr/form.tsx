@@ -125,7 +125,7 @@ export function EventProposalForm(props: {
                         variant='outline'
                         disabled={props.disabled}
                         className={cn(
-                          'pl-3 text-left font-normal',
+                          'pl-3 text-left text-base font-normal',
                           !field.value && 'text-muted-foreground',
                           formState.errors[field.name] && 'border-destructive',
                         )}
