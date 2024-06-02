@@ -14,9 +14,12 @@ import {
 export const eventsRouter = createTRPCRouter({
   get: protectedProcedure.query(async ({ ctx }) => {
     return await ctx.db.query.events.findMany({
-      where: (event, { eq }) =>
-        eq(event.handledBy, ctx.session.user.companyId).if(
-          ctx.session.user.role === 'vendor_admin',
+      where: (event, { eq, and, isNull }) =>
+        and(
+          eq(event.handledBy, ctx.session.user.companyId).if(
+            ctx.session.user.role === 'vendor_admin',
+          ),
+          isNull(event.deletedAt),
         ),
     });
   }),
@@ -32,6 +35,11 @@ export const eventsRouter = createTRPCRouter({
   delete: adminProcedure
     .input(selectEventSchema.pick({ id: true }))
     .mutation(async ({ ctx, input }) => {
-      return await ctx.db.delete(events).where(eq(events.id, input.id));
+      return await ctx.db
+        .update(events)
+        .set({
+          deletedAt: new Date(),
+        })
+        .where(eq(events.id, input.id));
     }),
 });

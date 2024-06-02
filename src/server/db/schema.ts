@@ -57,6 +57,7 @@ export const events = createTable('event', {
     .default(sql`gen_random_uuid()`),
   name: varchar('name', { length: 255 }).notNull(),
   createdAt: timestamp('created_at', { mode: 'date' }).defaultNow(),
+  deletedAt: timestamp('deleted_at', { mode: 'date' }),
 
   handledBy: uuid('handled_by')
     .notNull()
