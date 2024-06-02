@@ -2,6 +2,7 @@
 
 import { CalendarIcon, PlusIcon } from 'lucide-react';
 import moment from 'moment';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 import { cn } from '@/lib/utils';
@@ -35,11 +36,19 @@ import { insertEventProposalSchema } from '@/server/db/schema';
 import { api } from '@/trpc/react';
 
 export function EventProposalForm() {
+  const router = useRouter();
+
   const [dateCounter, setDateCounter] = useState(1);
 
+  const utils = api.useUtils();
   const { data } = api.auth.me.useQuery();
   const events = api.event.get.useQuery();
-  const create = api.proposedEvents.create.useMutation();
+  const create = api.proposedEvents.create.useMutation({
+    onSuccess: async () => {
+      await utils.proposedEvents.invalidate();
+      router.back();
+    },
+  });
 
   const form = useForm({
     schema: insertEventProposalSchema,

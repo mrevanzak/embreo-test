@@ -24,6 +24,7 @@ export default async function HR() {
         <CardTitle className='flex justify-between'>
           Proposed Events
           <ResponsiveDialog
+            id='add-event-proposal'
             title='Add Event Proposal'
             description='Propose your new wellness event'
             trigger={

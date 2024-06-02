@@ -24,6 +24,7 @@ export default async function EventsPage() {
         <CardTitle className='flex justify-between'>
           Events
           <ResponsiveDialog
+            id='add-event'
             title='Add Event'
             description="Add a new event that you're hosting"
             trigger={

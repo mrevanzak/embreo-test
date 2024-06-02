@@ -3,6 +3,7 @@
 import { type ColumnDef } from '@tanstack/react-table';
 import { Eye, Trash } from 'lucide-react';
 import moment from 'moment';
+import { useRouter } from 'next/navigation';
 
 import { DataTable } from '@/components/data-table';
 import { ResponsiveDialog } from '@/components/responsive-dialog';
@@ -13,11 +14,14 @@ import type { Event } from '@/server/db/schema';
 import { api } from '@/trpc/react';
 
 export function Table({ initialData }: { initialData: Event[] }) {
+  const router = useRouter();
+
   const utils = api.useUtils();
   const { data } = api.event.get.useQuery(undefined, { initialData });
   const { mutate, isPending } = api.event.delete.useMutation({
-    onSuccess: () => {
-      void utils.event.get.invalidate();
+    onSuccess: async () => {
+      await utils.event.get.invalidate();
+      router.back();
     },
   });
 
@@ -44,6 +48,7 @@ export function Table({ initialData }: { initialData: Event[] }) {
             </Button>
 
             <ResponsiveDialog
+              id={`delete-event-${row.original.id}`}
               title='Delete Event'
               description={`Are you sure you want to delete "${row.original.name}"?`}
               trigger={
