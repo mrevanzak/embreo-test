@@ -19,7 +19,7 @@ export function Table({ initialData }: { initialData: Event[] }) {
   const utils = api.useUtils();
   const { data } = api.event.get.useQuery(undefined, { initialData });
   const { mutate, isPending } = api.event.delete.useMutation({
-    onSuccess: async () => {
+    onSettled: async () => {
       await utils.event.get.invalidate();
       router.back();
     },

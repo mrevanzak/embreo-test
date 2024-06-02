@@ -22,7 +22,7 @@ export function EventForm() {
 
   const utils = api.useUtils();
   const { mutate, isPending } = api.event.create.useMutation({
-    onSuccess: async () => {
+    onSettled: async () => {
       await utils.event.get.invalidate();
       router.back();
     },

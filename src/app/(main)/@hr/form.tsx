@@ -53,7 +53,7 @@ export function EventProposalForm(props: {
   const { data } = api.auth.me.useQuery();
   const events = api.event.get.useQuery();
   const create = api.proposedEvents.create.useMutation({
-    onSuccess: async () => {
+    onSettled: async () => {
       await utils.proposedEvents.invalidate();
       router.back();
     },
@@ -63,7 +63,7 @@ export function EventProposalForm(props: {
     props.values?.approvedDate?.toString() ?? undefined,
   );
   const approve = api.proposedEvents.approve.useMutation({
-    onSuccess: async () => {
+    onSettled: async () => {
       await utils.proposedEvents.invalidate();
       router.back();
     },
@@ -71,7 +71,7 @@ export function EventProposalForm(props: {
 
   const [reject, setReject] = useState(false);
   const rejectEvent = api.proposedEvents.reject.useMutation({
-    onSuccess: async () => {
+    onSettled: async () => {
       await utils.proposedEvents.invalidate();
       router.back();
     },
