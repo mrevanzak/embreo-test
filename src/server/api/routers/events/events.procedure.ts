@@ -11,18 +11,22 @@ import {
   selectEventSchema,
 } from '@/server/db/schema';
 
+import { eventFilterSchema } from './events.input';
+
 export const eventsRouter = createTRPCRouter({
-  get: protectedProcedure.query(async ({ ctx }) => {
-    return await ctx.db.query.events.findMany({
-      where: (event, { eq, and, isNull }) =>
-        and(
-          eq(event.handledBy, ctx.session.user.companyId).if(
-            ctx.session.user.role === 'vendor_admin',
+  get: protectedProcedure
+    .input(eventFilterSchema)
+    .query(async ({ ctx, input }) => {
+      return await ctx.db.query.events.findMany({
+        where: (event, { eq, and, isNull }) =>
+          and(
+            eq(event.handledBy, ctx.session.user.companyId).if(
+              ctx.session.user.role === 'vendor_admin',
+            ),
+            isNull(event.deletedAt).if(!input?.withSoftDeleted),
           ),
-          isNull(event.deletedAt),
-        ),
-    });
-  }),
+      });
+    }),
 
   create: adminProcedure
     .input(insertEventSchema)

@@ -101,7 +101,7 @@ export function Table({
                 </Button>
               }
             >
-              <EventProposalForm values={row.original} disabled />
+              <EventProposalForm values={row.original} details />
             </ResponsiveDialog>
           </div>
         );

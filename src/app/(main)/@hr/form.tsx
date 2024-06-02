@@ -40,7 +40,7 @@ import { type EventProposalDataTable } from './table';
 
 export function EventProposalForm(props: {
   values?: EventProposalDataTable;
-  disabled?: boolean;
+  details?: boolean;
 }) {
   const router = useRouter();
 
@@ -51,7 +51,7 @@ export function EventProposalForm(props: {
 
   const utils = api.useUtils();
   const { data } = api.auth.me.useQuery();
-  const events = api.event.get.useQuery();
+  const events = api.event.get.useQuery({ withSoftDeleted: props?.details });
   const create = api.proposedEvents.create.useMutation({
     onSettled: async () => {
       await utils.proposedEvents.invalidate();
@@ -144,7 +144,7 @@ export function EventProposalForm(props: {
                         <FormControl>
                           <Button
                             variant='outline'
-                            disabled={props.disabled}
+                            disabled={props.details}
                             className={cn(
                               'flex-1 pl-3 text-left text-base font-normal',
                               !field.value && 'text-muted-foreground',
@@ -201,7 +201,7 @@ export function EventProposalForm(props: {
             <FormItem>
               <FormLabel>Location</FormLabel>
               <FormControl>
-                <FormInput {...field} disabled={props.disabled} />
+                <FormInput {...field} disabled={props.details} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -211,14 +211,13 @@ export function EventProposalForm(props: {
         <FormField
           control={form.control}
           name='eventId'
-          disabled={props.disabled}
           render={({ field, formState }) => (
             <FormItem>
               <FormLabel>Event</FormLabel>
               <Select
                 onValueChange={field.onChange}
                 defaultValue={field.value}
-                disabled={props.disabled}
+                disabled={props.details}
               >
                 <FormControl>
                   <SelectTrigger
