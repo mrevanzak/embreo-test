@@ -95,9 +95,11 @@ export const eventProposals = createTable('event_proposal', {
   date: date('date', { mode: 'date' }).notNull(),
   date1: date('date1', { mode: 'date' }),
   date2: date('date2', { mode: 'date' }),
+  approvedDate: date('approved_date', { mode: 'date' }),
   location: varchar('location', { length: 255 }).notNull(),
   createdAt: timestamp('created_at', { mode: 'date' }).defaultNow(),
   status: statusEnum('status').notNull().default('pending'),
+  remarks: varchar('remarks', { length: 255 }),
 
   eventId: uuid('event_id')
     .notNull()

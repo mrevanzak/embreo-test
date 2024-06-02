@@ -1,4 +1,5 @@
 import { type SQL, and, desc, eq } from 'drizzle-orm';
+import { alias } from 'drizzle-orm/pg-core';
 
 import {
   adminProcedure,
@@ -15,15 +16,18 @@ import {
 
 export const proposedEventsRouter = createTRPCRouter({
   get: protectedProcedure.query(async ({ ctx }) => {
+    const vendor = alias(companies, 'vendor');
     const baseQuery = ctx.db
       .select({
         eventProposals,
         event: events.name,
-        company: companies.name,
+        handledBy: vendor.name,
+        proposedBy: companies.name,
       })
       .from(eventProposals)
-      .innerJoin(companies, eq(eventProposals.proposedBy, companies.id))
       .innerJoin(events, eq(eventProposals.eventId, events.id))
+      .innerJoin(companies, eq(eventProposals.proposedBy, companies.id))
+      .innerJoin(vendor, eq(events.handledBy, vendor.id))
       .orderBy(desc(eventProposals.createdAt));
 
     const filters: SQL[] = [];
@@ -39,10 +43,8 @@ export const proposedEventsRouter = createTRPCRouter({
     return query.map((row) => ({
       ...row.eventProposals,
       event: row.event,
-      proposedBy:
-        ctx.session.user.role === 'company_hr'
-          ? ctx.session.user.name
-          : row.company,
+      handledBy: row.handledBy,
+      proposedBy: row.proposedBy,
     }));
   }),
 
@@ -58,6 +60,15 @@ export const proposedEventsRouter = createTRPCRouter({
       return await ctx.db
         .update(eventProposals)
         .set({ status: 'approved' })
+        .where(eq(eventProposals.id, input.id));
+    }),
+
+  reject: adminProcedure
+    .input(selectEventProposalSchema.pick({ id: true, remarks: true }))
+    .mutation(async ({ ctx, input }) => {
+      return await ctx.db
+        .update(eventProposals)
+        .set({ status: 'rejected', remarks: input.remarks })
         .where(eq(eventProposals.id, input.id));
     }),
 

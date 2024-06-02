@@ -1,9 +1,8 @@
 'use client';
 
 import { type ColumnDef } from '@tanstack/react-table';
-import { Eye, Trash } from 'lucide-react';
+import { Eye } from 'lucide-react';
 import moment from 'moment';
-import { useRouter } from 'next/navigation';
 
 import { cn } from '@/lib/utils';
 
@@ -17,38 +16,58 @@ import { api } from '@/trpc/react';
 
 import { EventProposalForm } from './form';
 
-export type EventProposalDataTable = EventProposal & { event: string };
+export type EventProposalDataTable = EventProposal & {
+  event: string;
+  handledBy: string;
+  proposedBy: string;
+};
 
 export function Table({
   initialData,
 }: {
   initialData: EventProposalDataTable[];
 }) {
-  const router = useRouter();
-
-  const utils = api.useUtils();
   const { data } = api.proposedEvents.get.useQuery(undefined, { initialData });
-  const { mutate, isPending } = api.proposedEvents.delete.useMutation({
-    onSuccess: async () => {
-      await utils.proposedEvents.get.invalidate();
-      router.back();
-    },
-  });
 
   const columns: ColumnDef<EventProposalDataTable>[] = [
-    {
-      accessorKey: 'proposedBy',
-      header: 'Proposed By',
-    },
     {
       accessorKey: 'event',
       header: 'Event',
     },
     {
+      accessorKey: 'handledBy',
+      header: 'Handled By',
+    },
+    {
+      accessorKey: 'date',
+      header: 'Date',
+      cell: ({ row }) => (
+        <Badge variant='outline' className='min-w-max'>
+          {moment(row.original.approvedDate ?? row.original.date).format('LL')}
+        </Badge>
+      ),
+    },
+    {
+      accessorKey: 'status',
+      header: 'Status',
+      cell: ({ row }) => {
+        switch (row.original.status) {
+          case 'approved':
+            return <Badge>Approved</Badge>;
+          case 'rejected':
+            return <Badge variant='destructive'>Rejected</Badge>;
+          default:
+            return <Badge variant='secondary'>Pending</Badge>;
+        }
+      },
+    },
+    {
       accessorKey: 'createdAt',
       header: 'Created At',
       cell: ({ row }) => (
-        <Badge>{moment(row.original.createdAt).fromNow()}</Badge>
+        <Badge variant='outline' className='min-w-max'>
+          {moment(row.original.createdAt).fromNow()}
+        </Badge>
       ),
     },
     {
@@ -83,30 +102,6 @@ export function Table({
               }
             >
               <EventProposalForm values={row.original} disabled />
-            </ResponsiveDialog>
-
-            <ResponsiveDialog
-              id={`delete-proposed-event-${row.original.id}`}
-              title='Delete Proposed Event'
-              description={`Are you sure you want to delete "${row.original.eventId}"?`}
-              trigger={
-                <Button
-                  size='icon'
-                  variant='ghost'
-                  className='hover:bg-destructive/60 hover:text-destructive-foreground'
-                >
-                  <Trash className='size-4' />
-                  <span className='sr-only'>Delete</span>
-                </Button>
-              }
-            >
-              <Button
-                className='w-full'
-                onClick={() => mutate({ id: row.original.id })}
-                loading={isPending}
-              >
-                Delete
-              </Button>
             </ResponsiveDialog>
           </div>
         );
