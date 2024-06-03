@@ -17,7 +17,9 @@ export function Table({ initialData }: { initialData: Event[] }) {
   const router = useRouter();
 
   const utils = api.useUtils();
-  const { data } = api.event.get.useQuery(undefined, { initialData });
+  const { data, isFetching } = api.event.get.useQuery(undefined, {
+    initialData,
+  });
   const { mutate, isPending } = api.event.delete.useMutation({
     onSettled: async () => {
       await utils.event.get.invalidate();
@@ -76,5 +78,5 @@ export function Table({ initialData }: { initialData: Event[] }) {
     },
   ];
 
-  return <DataTable columns={columns} data={data} />;
+  return <DataTable loading={isFetching} columns={columns} data={data} />;
 }

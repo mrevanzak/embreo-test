@@ -27,7 +27,9 @@ export function Table({
 }: {
   initialData: EventProposalDataTable[];
 }) {
-  const { data } = api.proposedEvents.get.useQuery(undefined, { initialData });
+  const { data, isFetching } = api.proposedEvents.get.useQuery(undefined, {
+    initialData,
+  });
 
   const columns: ColumnDef<EventProposalDataTable>[] = [
     {
@@ -109,5 +111,5 @@ export function Table({
     },
   ];
 
-  return <DataTable columns={columns} data={data} />;
+  return <DataTable loading={isFetching} columns={columns} data={data} />;
 }

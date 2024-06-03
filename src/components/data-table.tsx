@@ -6,6 +6,7 @@ import {
   getCoreRowModel,
   useReactTable,
 } from '@tanstack/react-table';
+import { LoaderCircle } from 'lucide-react';
 
 import {
   Table,
@@ -19,11 +20,13 @@ import {
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  loading?: boolean;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  loading,
 }: DataTableProps<TData, TValue>) {
   const table = useReactTable({
     data,
@@ -32,9 +35,15 @@ export function DataTable<TData, TValue>({
   });
 
   return (
-    <div className='space-y-4'>
+    <div className='relative space-y-4'>
       <div className='rounded-md border'>
         <Table>
+          {loading && (
+            <div className='absolute inset-0 flex items-center justify-center bg-white/80'>
+              <LoaderCircle className='size-6 animate-spin' />
+            </div>
+          )}
+
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
