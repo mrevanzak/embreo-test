@@ -1,5 +1,6 @@
 'use client';
 
+import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
@@ -26,11 +27,14 @@ import { signIn } from '@/server/actions/auth';
 import { authSchema } from '@/server/api/routers/auth/auth.input';
 
 export function SignInForm() {
+  const queryClient = useQueryClient();
+
   const form = useForm({
     schema: authSchema,
     mode: 'onTouched',
   });
   const onSubmit = form.handleSubmit(async ({ email, password }) => {
+    await queryClient.invalidateQueries();
     toast.promise(signIn(email, password), {
       loading: 'Signing in...',
       success: 'Signed in successfully',
