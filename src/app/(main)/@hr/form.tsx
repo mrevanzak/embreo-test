@@ -168,8 +168,9 @@ export function EventProposalForm(props: {
                             field.value ? new Date(field.value) : undefined
                           }
                           onSelect={field.onChange}
+                          // can only propose an event 3 days before
                           disabled={(date) =>
-                            date > new Date() || date < new Date('1900-01-01')
+                            date < moment().add(2, 'd').toDate()
                           }
                           initialFocus
                         />
